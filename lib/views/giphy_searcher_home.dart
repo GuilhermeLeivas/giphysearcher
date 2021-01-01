@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:giphysearcher/giphy_api/giphy_api_client.dart';
 import 'package:giphysearcher/models/giphy.dart';
+import 'package:giphysearcher/views/giphy_page.dart';
+import 'package:share/share.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class GiphySearcherHome extends StatefulWidget {
   @override
@@ -129,10 +132,16 @@ class _GiphySearcherHomeState extends State<GiphySearcherHome> {
         } else {
         return GestureDetector(
           // Foi usado o GestureDetector para podermos clicar nos Gifs
-          child: Image.network(
-            giphys[index].imageUrl,
-            height: 300,
-            fit: BoxFit.cover,
+          child: FadeInImage.memoryNetwork(
+              placeholder: kTransparentImage,
+              image: giphys[index].imageUrl,
+              height: 300.0,),
+          onLongPress: () {
+            Share.share(giphys[index].imageUrl, subject: giphys[index].title);
+          },
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => GiphyPage(giphyUrl: giphys[index].imageUrl, title: giphys[index].title)),
           ),
         );
         }
