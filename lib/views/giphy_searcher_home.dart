@@ -135,18 +135,33 @@ class _GiphySearcherHomeState extends State<GiphySearcherHome> {
           child: FadeInImage.memoryNetwork(
               placeholder: kTransparentImage,
               image: giphys[index].imageUrl,
-              height: 300.0,),
+              height: 300.0,
+            fit: BoxFit.fitHeight,
+          ),
           onLongPress: () {
             Share.share(giphys[index].imageUrl, subject: giphys[index].title);
           },
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => GiphyPage(giphyUrl: giphys[index].imageUrl, title: giphys[index].title)),
-          ),
+          onTap: () => _showGiphyDialog(giphys[index]),
         );
         }
       },
     );
+  }
+  _showGiphyDialog(Giphy giphy) {
+    showDialog(
+        context: context,
+        builder: (_) => new AlertDialog(
+          title: new Text('Title: ' + giphy.title),
+          content: Image.network(giphy.imageUrl),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Close me!'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        ));
   }
 
   _getTrendingGiphys() async {
